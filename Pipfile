@@ -1,0 +1,45 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+ipykernel = "*"
+sphinx = "*"
+sphinx-gallery = "*"
+sphinx-bootstrap-theme = "*"
+numpydoc = "*"
+sphinxcontrib-restbuilder = "*"
+black = ">=20.8b1"
+pytest = "*"
+pytest-cov = "*"
+coverage = "*"
+codespell = "*"
+pydocstyle = "*"
+mlxtend = "*"
+pyre-check = "*"
+mypy = "*"
+jupyter = "*"
+jupyterlab = "*"
+vtk = "*"
+pyvista = "*"
+pyqt5 = "*"
+zipp = {editable = true, path = "/Users/adam2392/Documents/eztrack"}
+
+[packages]
+numpy = "*"
+scipy = "*"
+pandas = "*"
+mne = ">=0.21"
+mne-bids = {file = "https://api.github.com/repos/mne-tools/mne-bids/zipball/master"}
+pybv = ">=0.3"
+pybids = "*"
+joblib = ">=0.15"
+matplotlib = "*"
+seaborn = "*"
+
+[requires]
+python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true
