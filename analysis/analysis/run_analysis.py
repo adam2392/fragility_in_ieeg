@@ -6,12 +6,26 @@ from eztrack import (
     write_result_fragility,
     plot_result_heatmap,
 )
+from mne.utils import warn
 from mne_bids import read_raw_bids, BIDSPath, get_entity_vals
+
+
+def _append_path(path, resample_sfreq, subject, sfreq):
+    if resample_sfreq:
+        sample_rate_name = f"resampled-{sfreq}Hz"
+    else:
+        sample_rate_name = f"{sfreq}Hz"
+
+    return (path
+            / sample_rate_name
+            / "fragility"
+            / reference
+            / f"sub-{subject}")
 
 
 def run_analysis(
         bids_path, reference="monopolar", resample_sfreq=None, deriv_path=None,
-        figures_path=None, verbose=True, overwrite=False,
+        figures_path=None, excel_fpath=None, verbose=True, overwrite=False,
 ):
     subject = bids_path.subject
 
@@ -21,6 +35,9 @@ def run_analysis(
     raw.load_data()
 
     if resample_sfreq:
+        if resample_sfreq > raw.info['sfreq']:
+            return
+
         # perform resampling
         raw = raw.resample(resample_sfreq, n_jobs=-1)
 
@@ -29,11 +46,10 @@ def run_analysis(
                 bids_path.root
                 / "derivatives"
         )
-    deriv_path = (deriv_path / 'nodepth'
-                / f"{int(raw.info['sfreq'])}Hz"
-                / "fragility"
-                / reference
-                / f"sub-{subject}")
+
+    sfreq_int = int(raw.info['sfreq'])
+    deriv_path = _append_path(deriv_path, resample_sfreq=resample_sfreq,
+                              subject=subject, sfreq=sfreq_int)
     # set where to save the data output to
     if figures_path is None:
         figures_path = (
@@ -41,23 +57,27 @@ def run_analysis(
                 / "derivatives"
                 / "figures"
         )
-    figures_path = (figures_path
-                    / 'nodepth'
-                    / f"{int(raw.info['sfreq'])}Hz"
-                    / "fragility"
-                    / reference
-                    / f"sub-{subject}")
-    deriv_root = root / 'derivatives' / "figures" / 'nodepth' \
-                 / f"{int(raw.info['sfreq'])}Hz" \
-                 / "raw" \
-                 / reference \
-                 / f"sub-{subject}"
+    if resample_sfreq:
+        sample_rate_name = f"resampled-{sfreq}Hz"
+    else:
+        sample_rate_name = f"{sfreq}Hz"
+    deriv_root = (figures_path
+                  # / 'nodepth'
+                  / sample_rate_name
+                  / "raw" \
+                  / reference \
+                  / f"sub-{subject}")
+    figures_path = _append_path(figures_path, resample_sfreq=resample_sfreq,
+                                subject=subject, sfreq=sfreq_int)
 
     # use the same basename to save the data
     deriv_basename = bids_path.basename
-
-    if len(list(deriv_path.rglob(f'{deriv_basename}*.npy'))) == 1 and not overwrite:
-        raise RuntimeError(f'The {deriv_basename}.npy exists, but overwrite if False.')
+    bids_entities = bids_path.entities
+    deriv_basename_nosuffix = BIDSPath(**bids_entities).basename
+    print(deriv_basename_nosuffix)
+    if len(list(deriv_path.rglob(f'{deriv_basename_nosuffix}*.npy'))) > 0 and not overwrite:
+        warn(f'The {deriv_basename}.npy exists, but overwrite if False.')
+        return
 
     # pre-process the data using preprocess pipeline
     datatype = bids_path.datatype
@@ -105,6 +125,7 @@ def run_analysis(
         result=result,
         fig_basename=fig_basename,
         figures_path=figures_path,
+        excel_fpath=excel_fpath
     )
 
 
@@ -124,25 +145,24 @@ if __name__ == "__main__":
             "/Users/adam2392/Dropbox/epilepsy_bids/sourcedata/organized_clinical_datasheet_raw.xlsx"
         )
     elif WORKSTATION == "lab":
-        root = Path("/home/adam2392/hdd2/epilepsy_bids/")
+        root = Path("/home/adam2392/hdd/epilepsy_bids/")
         excel_fpath = Path(
-            "/home/adam2392/hdd2/epilepsy_bids/sourcedata/organized_clinical_datasheet_raw.xlsx"
+            "/home/adam2392/hdd/epilepsy_bids/sourcedata/organized_clinical_datasheet_raw.xlsx"
         )
 
         # output directory
-        output_dir = Path("/home/adam2392/hdd") / 'derivatives'
+        output_dir = Path("/home/adam2392/hdd2") / 'derivatives'
 
         # figures directory
         figures_dir = output_dir / 'figures'
 
-
     # define BIDS entities
     # SUBJECTS = [
-    #     'pt1', 'pt2', 'pt3',  # NIH
+    #     # 'pt1', 'pt2', 'pt3',  # NIH
     #     'jh103', 'jh105',  # JHH
-    #     # 'umf001', 'umf002', 'umf003', 'umf004', 'umf005',  # UMF
-    #     # 'la00', 'la01', 'la02', 'la03', 'la04', 'la05', 'la06',
-    #     # 'la07'
+    #     'umf001', 'umf002', 'umf003', 'umf005',  # UMF
+    #     #     # 'la00', 'la01', 'la02', 'la03', 'la04', 'la05', 'la06',
+    #     #     # 'la07'
     # ]
 
     session = "presurgery"  # only one session
@@ -170,7 +190,8 @@ if __name__ == "__main__":
         ignore_tasks = [tsk for tsk in all_tasks if tsk != task]
         runs = get_entity_vals(
             root, 'run', ignore_subjects=ignore_subs,
-            ignore_tasks=ignore_tasks
+            ignore_tasks=ignore_tasks,
+            ignore_acquisitions=['seeg']
         )
         print(f'Found {runs} runs for {task} task.')
 
@@ -191,4 +212,5 @@ if __name__ == "__main__":
 
             run_analysis(bids_path, reference=reference,
                          resample_sfreq=sfreq,
-                         deriv_path=output_dir)
+                         deriv_path=output_dir, figures_path=figures_dir,
+                         excel_fpath=excel_fpath)
