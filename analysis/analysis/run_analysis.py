@@ -168,7 +168,7 @@ if __name__ == "__main__":
     session = "presurgery"  # only one session
     task = "ictal"
     datatype = "ieeg"
-    acquisition = "ecog"  # or SEEG
+    acquisition = "seeg"  # or SEEG
     extension = ".vhdr"
 
     # analysis parameters
@@ -191,7 +191,7 @@ if __name__ == "__main__":
         runs = get_entity_vals(
             root, 'run', ignore_subjects=ignore_subs,
             ignore_tasks=ignore_tasks,
-            ignore_acquisitions=['seeg']
+            ignore_acquisitions=['ecog']
         )
         print(f'Found {runs} runs for {task} task.')
 
@@ -213,4 +213,4 @@ if __name__ == "__main__":
             run_analysis(bids_path, reference=reference,
                          resample_sfreq=sfreq,
                          deriv_path=output_dir, figures_path=figures_dir,
-                         excel_fpath=excel_fpath)
+                         excel_fpath=excel_fpath, overwrite=False)
