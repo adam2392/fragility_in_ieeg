@@ -38,6 +38,7 @@ matplotlib = "*"
 seaborn = "*"
 black = "*"
 eztrack = {editable = true, path = "/home/adam2392/Documents/eztrack"}
+pyvistaqt = "*"
 
 [requires]
 python_version = "3.8"
