@@ -24,6 +24,7 @@ jupyterlab = "*"
 vtk = "*"
 pyvista = "*"
 pyqt5 = "*"
+pyvistaqt = "*"
 
 [packages]
 numpy = "*"
@@ -36,9 +37,7 @@ pybids = "*"
 joblib = ">=0.15"
 matplotlib = "*"
 seaborn = "*"
-black = "*"
-eztrack = {editable = true, path = "/home/adam2392/Documents/eztrack"}
-pyvistaqt = "*"
+nilearn = "*"
 
 [requires]
 python_version = "3.8"

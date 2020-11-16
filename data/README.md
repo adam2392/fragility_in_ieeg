@@ -1,5 +1,8 @@
 # Figure Data
 
+The [pdf](neural_fragility_journal_figures.pdf) contains a pdf rendering of the 
+notebook that generated main figures in the manuscript.
+
 ## nested_cv
 
 Contains the indices used to generate the different folds of the 10-fold CV experiment.
