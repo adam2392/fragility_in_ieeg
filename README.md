@@ -1,11 +1,11 @@
 # Neural Fragility In IEEG Data
 
 A repository for generating figures for "Neural Fragility of iEEG as a marker for the seizure onset zone".
-Notebooks use some helper functions from a private repository, but all figures to be generated for publication can be found in the `data/` directory.
+Notebooks use some helper functions from a private repository, but all figures to be generated for 
+publication can be found in the `data/` directory.
 
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-   :target: https://github.com/ambv/black
-   :alt: Code style: black
+For a demo of the neural fragility algorithm on a single subject, contact 
+authors for the Gigantum demo.
 
 Data Organization
 -----------------
@@ -13,16 +13,6 @@ Data Organization
 Data should be organized in the BIDS-iEEG format:
 
 https://github.com/bids-standard/bids-specification/blob/master/src/04-modality-specific-files/04-intracranial-electroencephalography.md
-
-Additional data components:
-
-.. code-block::
-
-   1. electrode_layout.xlsx 
-       A layout of electrodes by contact number denoting white matter (WM), outside brain (OUT), csf (CSF), ventricle (ventricle), or other bad contacts.
-
-   2. clinical_metadata.xlsx     
-       A database column layout of subject identifiers and their metadata.
 
 System Requirements
 ===================
