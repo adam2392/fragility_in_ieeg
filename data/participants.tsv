@@ -1,99 +1,104 @@
-participant_id	age	sex	hand	outcome	engel_score	ilae_score	date_follow_up	ethnicity	years_follow_up	site
-sub-jh101	n/a	n/a	n/a	F	4.0	6.0	n/a	n/a	1.0	JHH
-sub-jh103	n/a	n/a	n/a	F	4.0	6.0	n/a	n/a	1.0	JHH
-sub-jh105	n/a	n/a	n/a	S	1.0	1.0	n/a	n/a	1.0	JHH
-sub-jh108	n/a	n/a	n/a	F	4.0	6.0	n/a	n/a	1.0	JHH
-sub-la00	32.0	M	R	S	1.0	1.0	n/a	0.0	5.0	CC
-sub-la01	32.0	F	R	F	4.0	4.0	n/a	0.0	5.0	CC
-sub-la02	19.0	F	R	S	1.0	1.0	n/a	0.0	3.0	CC
-sub-la03	37.0	M	R	F	2.0	2.0	n/a	0.0	4.0	CC
-sub-la04	32.0	M	R	F	2.0	4.0	n/a	0.0	4.0	CC
-sub-la05	29.0	M	R	F	2.0	2.0	n/a	0.0	3.0	CC
-sub-la06	37.0	F	R	F	2.0	3.0	n/a	0.0	4.0	CC
-sub-la07	22.0	F	R	S	1.0	1.0	n/a	0.0	3.0	CC
-sub-la08	24.0	F	R	F	3.0	4.0	n/a	0.0	5.0	CC
-sub-la09	34.0	F	R	F	2.0	4.0	n/a	0.0	3.0	CC
-sub-la10	20.0	M	R	F	2.0	5.0	n/a	0.0	4.0	CC
-sub-la11	22.0	M	R	F	2.0	4.0	n/a	0.0	1.0	CC
-sub-la12	22.0	M	R	F	3.0	1.0	n/a	n/a	4.0	CC
-sub-la13	43.0	M	R	S	1.0	2.0	n/a	0.0	3.0	CC
-sub-la15	22.0	M	R	F	4.0	5.0	n/a	0.0	3.0	CC
-sub-la16	37.0	M	R	F	4.0	5.0	n/a	0.0	1.0	CC
-sub-la17	23.0	M	R	F	4.0	5.0	n/a	0.0	4.0	CC
-sub-la20	59.0	M	R	F	3.0	3.0	n/a	0.0	3.0	CC
-sub-la21	40.0	M	R	S	1.0	1.0	n/a	0.0	1.0	CC
-sub-la22	44.0	F	R	F	2.0	4.0	n/a	4.0	3.0	CC
-sub-la23	28.0	F	L	S	1.0	1.0	n/a	0.0	1.0	CC
-sub-la24	19.0	F	R	F	2.0	3.0	n/a	0.0	2.0	CC
-sub-la27	22.0	F	R	F	3.0	4.0	n/a	0.0	1.0	CC
-sub-la28	38.0	M	R	F	4.0	5.0	n/a	0.0	2.0	CC
-sub-la29	37.0	F	R	F	4.0	5.0	n/a	0.0	2.0	CC
-sub-la31	24.0	F	R	F	4.0	5.0	n/a	0.0	1.0	CC
-sub-nl01	24.0	F	R	F	3.0	2.0	n/a	0.0	1.0	CC
-sub-nl02	56.0	F	R	NR	-1.0	n/a	n/a	0.0	2.0	CC
-sub-nl03	6.0	M	L	F	2.0	2.0	n/a	0.0	1.0	CC
-sub-nl04	16.0	M	L	S	1.0	2.0	n/a	n/a	1.0	CC
-sub-nl05	23.0	M	L	S	1.0	2.0	n/a	0.0	3.0	CC
-sub-nl06	29.0	M	R	NR	-1.0	n/a	n/a	0.0	4.0	CC
-sub-nl07	37.0	M	R	S	1.0	1.0	2017-01-01	0.0	1.0	CC
-sub-nl08	16.0	F	R	S	1.0	1.0	n/a	0.0	1.0	CC
-sub-nl09	30.0	F	L	S	1.0	1.0	n/a	0.0	1.0	CC
-sub-nl10	38.0	M	R	F	4.0	3.0	n/a	0.0	1.0	CC
-sub-nl11	39.0	F	R	NR	-1.0	n/a	n/a	0.0	1.0	CC
-sub-nl13	65.0	F	R	S	1.0	1.0	n/a	0.0	4.0	CC
-sub-nl14	43.0	M	R	F	2.0	4.0	n/a	0.0	1.0	CC
-sub-nl15	31.0	F	R	S	1.0	2.0	n/a	0.0	4.0	CC
-sub-nl16	25.0	F	R	S	1.0	1.0	n/a	0.0	2.0	CC
-sub-nl17	24.0	M	R	S	1.0	1.0	n/a	0.0	1.0	CC
-sub-nl18	18.0	F	R	S	1.0	1.0	n/a	0.0	1.0	CC
-sub-nl19	25.0	M	L	F	3.0	3.0	n/a	1.0	2.0	CC
-sub-nl20	58.0	F	R	S	1.0	1.0	n/a	0.0	1.0	CC
-sub-nl21	48.0	F	L	S	1.0	1.0	n/a	0.0	3.0	CC
-sub-nl22	3.0	M	R	S	1.0	1.0	n/a	0.0	1.0	CC
-sub-nl23	33.0	M	n/a	S	1.0	3.0	n/a	0.0	5.0	CC
-sub-nl24	52.0	F	R	F	3.0	4.0	n/a	0.0	1.0	CC
-sub-pt1	n/a	n/a	n/a	S	1.0	2.0	n/a	0.0	3.0	NIH
-sub-pt10	44.0	F	R	F	2.0	3.0	n/a	0.0	1.0	NIH
-sub-pt11	n/a	n/a	n/a	S	1.0	1.0	n/a	0.0	1.0	NIH
-sub-pt12	n/a	n/a	n/a	F	2.0	4.0	n/a	2.0	5.0	NIH
-sub-pt13	n/a	n/a	n/a	S	1.0	2.0	n/a	2.0	2.0	NIH
-sub-pt14	n/a	n/a	n/a	F	4.0	4.0	n/a	0.0	1.0	NIH
-sub-pt15	n/a	n/a	n/a	S	1.0	1.0	n/a	0.0	2.0	NIH
-sub-pt16	n/a	n/a	n/a	S	1.0	1.0	n/a	1.0	2.0	NIH
-sub-pt17	n/a	n/a	n/a	S	1.0	1.0	n/a	0.0	4.0	NIH
-sub-pt2	28.0	F	R	S	1.0	1.0	n/a	1.0	3.0	NIH
-sub-pt3	n/a	n/a	n/a	S	1.0	1.0	n/a	0.0	2.0	NIH
-sub-pt6	n/a	n/a	n/a	F	2.0	5.0	n/a	0.0	3.0	NIH
-sub-pt7	n/a	n/a	n/a	F	3.0	1.0	2020-02-14	2.0	7.0	NIH
-sub-pt8	n/a	n/a	n/a	S	1.0	1.0	n/a	n/a	2.0	NIH
-sub-pt9	n/a	n/a	n/a	n/a	n/a	n/a	n/a	n/a	n/a	n/a
-sub-tvb1	24.0	M	R	F	3.0	5.0	n/a	0.0	4.0	CC
-sub-tvb11	38.0	F	R	F	4.0	5.0	n/a	0.0	3.0	CC
-sub-tvb12	49.0	F	R	F	2.0	3.0	n/a	0.0	4.0	CC
-sub-tvb14	29.0	M	L	F	4.0	6.0	n/a	0.0	3.0	CC
-sub-tvb17	24.0	M	R	S	1.0	1.0	n/a	0.0	3.0	CC
-sub-tvb18	33.0	F	R	S	1.0	1.0	n/a	0.0	3.0	CC
-sub-tvb19	41.0	F	R	F	2.0	5.0	n/a	0.0	3.0	CC
-sub-tvb2	27.0	F	L	F	3.0	5.0	n/a	0.0	4.0	CC
-sub-tvb23	16.0	M	R	F	2.0	3.0	n/a	0.0	3.0	CC
-sub-tvb27	23.0	F	R	F	2.0	3.0	n/a	0.0	5.0	CC
-sub-tvb28	18.0	F	L	F	3.0	4.0	n/a	0.0	1.0	CC
-sub-tvb29	14.0	F	R	F	2.0	3.0	n/a	0.0	4.0	CC
-sub-tvb5	26.0	M	R	S	1.0	1.0	n/a	n/a	2.0	CC
-sub-tvb7	27.0	F	R	F	4.0	6.0	n/a	0.0	2.0	CC
-sub-tvb8	10.0	M	R	S	1.0	1.0	n/a	0.0	1.0	CC
-sub-umf001	37.0	F	R	S	1.0	1.0	n/a	1.0	1.0	UMF
-sub-umf002	39.0	F	R	F	2.0	1.0	n/a	1.0	1.0	UMF
-sub-umf003	43.0	M	R	F	3.0	4.0	n/a	2.0	1.0	UMF
-sub-umf004	23.0	F	R	S	1.0	1.0	n/a	1.0	1.0	UMF
-sub-umf005	32.0	F	R	S	1.0	1.0	n/a	2.0	1.0	UMF
-sub-umf006	n/a	n/a	n/a	n/a	n/a	n/a	n/a	n/a	n/a	UMF
-sub-ummc001	23.0	M	R	NR	-1.0	-1.0	n/a	n/a	7.0	UMMC
-sub-ummc002	17.0	M	R	S	1.0	1.0	n/a	n/a	4.0	UMMC
-sub-ummc003	31.0	M	n/a	S	1.0	1.0	n/a	n/a	1.0	UMMC
-sub-ummc004	38.0	M	R	S	1.0	1.0	n/a	n/a	4.0	UMMC
-sub-ummc005	47.0	M	n/a	S	1.0	1.0	n/a	n/a	1.0	UMMC
-sub-ummc006	36.0	M	n/a	S	1.0	2.0	n/a	n/a	4.0	UMMC
-sub-ummc007	54.0	M	n/a	NR	-1.0	-1.0	n/a	n/a	2.0	UMMC
-sub-ummc008	49.0	M	n/a	S	1.0	1.0	n/a	n/a	1.0	UMMC
-sub-ummc009	36.0	M	R	S	1.0	1.0	n/a	n/a	1.0	UMMC
+participant_id	age	sex	hand	outcome	engel_score	ilae_score	date_follow_up	ethnicity	years_follow_up	site	clinical_complexity
+sub-jh101	n/a	n/a	n/a	F	4.0	6.0	n/a	n/a	1.0	JHH	4.0
+sub-jh102	n/a	n/a	n/a	NR	-1.0	-1.0	n/a	n/a	1.0	JHH	4.0
+sub-jh103	n/a	n/a	n/a	F	4.0	6.0	n/a	n/a	1.0	JHH	3.0
+sub-jh104	n/a	n/a	n/a	NR	-1.0	-1.0	n/a	n/a	1.0	JHH	3.0
+sub-jh105	n/a	n/a	n/a	S	1.0	1.0	n/a	n/a	1.0	JHH	2.0
+sub-jh106	n/a	n/a	n/a	NR	-1.0	-1.0	n/a	n/a	1.0	JHH	3.0
+sub-jh107	n/a	n/a	n/a	S	1.0	1.0	n/a	n/a	1.0	JHH	2.0
+sub-jh108	n/a	n/a	n/a	F	4.0	6.0	n/a	n/a	1.0	JHH	4.0
+sub-la00	32.0	M	R	S	1.0	1.0	n/a	0.0	5.0	CC	4.0
+sub-la01	32.0	F	R	F	4.0	4.0	n/a	0.0	5.0	CC	4.0
+sub-la02	19.0	F	R	S	1.0	1.0	n/a	0.0	3.0	CC	1.0
+sub-la03	37.0	M	R	F	2.0	2.0	n/a	0.0	4.0	CC	3.0
+sub-la04	32.0	M	R	F	2.0	4.0	n/a	0.0	4.0	CC	4.0
+sub-la05	29.0	M	R	F	2.0	2.0	n/a	0.0	3.0	CC	3.0
+sub-la06	37.0	F	R	F	2.0	3.0	n/a	0.0	4.0	CC	3.0
+sub-la07	22.0	F	R	S	1.0	1.0	n/a	0.0	3.0	CC	3.0
+sub-la08	24.0	F	R	F	3.0	4.0	n/a	0.0	5.0	CC	4.0
+sub-la09	34.0	F	R	F	2.0	4.0	n/a	0.0	3.0	CC	4.0
+sub-la10	20.0	M	R	F	2.0	5.0	n/a	0.0	4.0	CC	3.0
+sub-la11	22.0	M	R	F	2.0	4.0	n/a	0.0	1.0	CC	4.0
+sub-la12	22.0	M	R	F	3.0	1.0	n/a	n/a	4.0	CC	3.0
+sub-la13	43.0	M	R	S	1.0	2.0	n/a	0.0	3.0	CC	3.0
+sub-la15	22.0	M	R	F	4.0	5.0	n/a	0.0	3.0	CC	3.0
+sub-la16	37.0	M	R	F	4.0	5.0	n/a	0.0	1.0	CC	3.0
+sub-la17	23.0	M	R	F	4.0	5.0	n/a	0.0	4.0	CC	4.0
+sub-la20	59.0	M	R	F	3.0	3.0	n/a	0.0	3.0	CC	3.0
+sub-la21	40.0	M	R	S	1.0	1.0	n/a	0.0	1.0	CC	2.0
+sub-la22	44.0	F	R	F	2.0	4.0	n/a	4.0	3.0	CC	2.0
+sub-la23	28.0	F	L	S	1.0	1.0	n/a	0.0	1.0	CC	1.0
+sub-la24	19.0	F	R	F	2.0	3.0	n/a	0.0	2.0	CC	1.0
+sub-la27	22.0	F	R	F	3.0	4.0	n/a	0.0	1.0	CC	4.0
+sub-la28	38.0	M	R	F	4.0	5.0	n/a	0.0	2.0	CC	4.0
+sub-la29	37.0	F	R	F	4.0	5.0	n/a	0.0	2.0	CC	4.0
+sub-la31	24.0	F	R	F	4.0	5.0	n/a	0.0	1.0	CC	3.0
+sub-nl01	24.0	F	R	F	3.0	2.0	n/a	0.0	1.0	CC	3.0
+sub-nl02	56.0	F	R	NR	-1.0	n/a	n/a	0.0	2.0	CC	1.0
+sub-nl03	6.0	M	L	F	2.0	2.0	n/a	0.0	1.0	CC	1.0
+sub-nl04	16.0	M	L	S	1.0	2.0	n/a	n/a	1.0	CC	1.0
+sub-nl05	23.0	M	L	S	1.0	2.0	n/a	0.0	3.0	CC	1.0
+sub-nl06	29.0	M	R	NR	-1.0	n/a	n/a	0.0	4.0	CC	1.0
+sub-nl07	37.0	M	R	S	1.0	1.0	2017-01-01	0.0	1.0	CC	1.0
+sub-nl08	16.0	F	R	S	1.0	1.0	n/a	0.0	1.0	CC	1.0
+sub-nl09	30.0	F	L	S	1.0	1.0	n/a	0.0	1.0	CC	1.0
+sub-nl10	38.0	M	R	F	4.0	3.0	n/a	0.0	1.0	CC	1.0
+sub-nl11	39.0	F	R	NR	-1.0	n/a	n/a	0.0	1.0	CC	2.0
+sub-nl12	16.0	M	R	F	4.0	5.0	n/a	0.0	1.0	CC	2.0
+sub-nl13	65.0	F	R	S	1.0	1.0	n/a	0.0	4.0	CC	2.0
+sub-nl14	43.0	M	R	F	2.0	4.0	n/a	0.0	1.0	CC	2.0
+sub-nl15	31.0	F	R	S	1.0	2.0	n/a	0.0	4.0	CC	2.0
+sub-nl16	25.0	F	R	S	1.0	1.0	n/a	0.0	2.0	CC	2.0
+sub-nl17	24.0	M	R	S	1.0	1.0	n/a	0.0	1.0	CC	2.0
+sub-nl18	18.0	F	R	S	1.0	1.0	n/a	0.0	1.0	CC	2.0
+sub-nl19	25.0	M	L	F	3.0	3.0	n/a	1.0	2.0	CC	2.0
+sub-nl20	58.0	F	R	S	1.0	1.0	n/a	0.0	1.0	CC	2.0
+sub-nl21	48.0	F	L	S	1.0	1.0	n/a	0.0	3.0	CC	1.0
+sub-nl22	3.0	M	R	S	1.0	1.0	n/a	0.0	1.0	CC	1.0
+sub-nl23	33.0	M	n/a	S	1.0	3.0	n/a	0.0	5.0	CC	2.0
+sub-nl24	52.0	F	R	F	3.0	4.0	n/a	0.0	1.0	CC	4.0
+sub-pt1	30.0	F	R	S	1.0	2.0	n/a	0.0	3.0	NIH	1.0
+sub-pt10	44.0	F	R	F	2.0	3.0	n/a	0.0	1.0	NIH	1.0
+sub-pt11	31.0	M	R	S	1.0	1.0	n/a	0.0	1.0	NIH	3.0
+sub-pt12	43.0	F	R	F	2.0	4.0	n/a	2.0	5.0	NIH	4.0
+sub-pt13	27.0	M	R	S	1.0	2.0	n/a	2.0	2.0	NIH	3.0
+sub-pt14	49.0	F	R	F	4.0	4.0	n/a	0.0	1.0	NIH	1.0
+sub-pt15	59.0	F	L	S	1.0	1.0	n/a	0.0	2.0	NIH	1.0
+sub-pt16	52.0	F	R	S	1.0	1.0	n/a	1.0	2.0	NIH	1.0
+sub-pt17	13.0	M	R	S	1.0	1.0	n/a	0.0	4.0	NIH	1.0
+sub-pt2	28.0	F	R	S	1.0	1.0	n/a	1.0	3.0	NIH	1.0
+sub-pt3	45.0	M	R	S	1.0	1.0	n/a	0.0	2.0	NIH	3.0
+sub-pt6	33.0	M	R	F	2.0	5.0	n/a	0.0	3.0	NIH	4.0
+sub-pt7	39.0	F	R	F	3.0	1.0	2020-02-14	2.0	7.0	NIH	3.0
+sub-pt8	25.0	M	L	S	1.0	1.0	n/a	n/a	2.0	NIH	3.0
+sub-pt9	n/a	n/a	n/a	n/a	n/a	n/a	n/a	n/a	n/a	n/a	n/a
+sub-tvb1	24.0	M	R	F	3.0	5.0	n/a	0.0	4.0	CC	2.0
+sub-tvb11	38.0	F	R	F	4.0	5.0	n/a	0.0	3.0	CC	1.0
+sub-tvb12	49.0	F	R	F	2.0	3.0	n/a	0.0	4.0	CC	3.0
+sub-tvb14	29.0	M	L	F	4.0	6.0	n/a	0.0	3.0	CC	2.0
+sub-tvb17	24.0	M	R	S	1.0	1.0	n/a	0.0	3.0	CC	2.0
+sub-tvb18	33.0	F	R	S	1.0	1.0	n/a	0.0	3.0	CC	3.0
+sub-tvb19	41.0	F	R	F	2.0	5.0	n/a	0.0	3.0	CC	4.0
+sub-tvb2	27.0	F	L	F	3.0	5.0	n/a	0.0	4.0	CC	3.0
+sub-tvb23	16.0	M	R	F	2.0	3.0	n/a	0.0	3.0	CC	2.0
+sub-tvb27	23.0	F	R	F	2.0	3.0	n/a	0.0	5.0	CC	3.0
+sub-tvb28	18.0	F	L	F	3.0	4.0	n/a	0.0	1.0	CC	4.0
+sub-tvb29	14.0	F	R	F	2.0	3.0	n/a	0.0	4.0	CC	4.0
+sub-tvb5	26.0	M	R	S	1.0	1.0	n/a	n/a	2.0	CC	3.0
+sub-tvb7	27.0	F	R	F	4.0	6.0	n/a	0.0	2.0	CC	2.0
+sub-tvb8	10.0	M	R	S	1.0	1.0	n/a	0.0	1.0	CC	2.0
+sub-umf001	37.0	F	R	S	1.0	1.0	n/a	1.0	1.0	UMF	2.0
+sub-umf002	39.0	F	R	F	2.0	1.0	n/a	1.0	1.0	UMF	1.0
+sub-umf003	43.0	M	R	F	3.0	4.0	n/a	2.0	1.0	UMF	2.0
+sub-umf004	23.0	F	R	S	1.0	1.0	n/a	1.0	1.0	UMF	2.0
+sub-umf005	32.0	F	R	S	1.0	1.0	n/a	2.0	1.0	UMF	1.0
+sub-umf006	n/a	n/a	n/a	n/a	n/a	n/a	n/a	n/a	n/a	UMF	n/a
+sub-ummc001	23.0	M	R	NR	-1.0	-1.0	n/a	n/a	7.0	UMMC	3.0
+sub-ummc002	17.0	M	R	S	1.0	1.0	n/a	n/a	4.0	UMMC	2.0
+sub-ummc003	31.0	M	n/a	S	1.0	1.0	n/a	n/a	1.0	UMMC	1.0
+sub-ummc004	38.0	M	R	S	1.0	1.0	n/a	n/a	4.0	UMMC	2.0
+sub-ummc005	47.0	M	n/a	S	1.0	1.0	n/a	n/a	1.0	UMMC	2.0
+sub-ummc006	36.0	M	n/a	S	1.0	2.0	n/a	n/a	4.0	UMMC	2.0
+sub-ummc007	54.0	M	n/a	NR	-1.0	-1.0	n/a	n/a	2.0	UMMC	4.0
+sub-ummc008	49.0	M	n/a	S	1.0	1.0	n/a	n/a	1.0	UMMC	2.0
+sub-ummc009	36.0	M	R	S	1.0	1.0	n/a	n/a	1.0	UMMC	1.0
