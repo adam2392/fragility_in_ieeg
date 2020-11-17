@@ -1,0 +1,80 @@
+{
+    "participant_id": {
+        "Description": "Unique participant identifier"
+    },
+    "age": {
+        "Description": "Age of the participant at time of testing",
+        "Units": "years"
+    },
+    "sex": {
+        "Description": "Biological sex of the participant",
+        "Levels": {
+            "F": "female",
+            "M": "male"
+        }
+    },
+    "hand": {
+        "Description": "Handedness of the participant",
+        "Levels": {
+            "R": "right",
+            "L": "left",
+            "A": "ambidextrous"
+        }
+    },
+    "outcome": {
+        "Description": "Seizure freedom outcome after surgery.",
+        "Levels": {
+            "S": "successful surgery; seizure freedom",
+            "F": "failed surgery; recurring seizures",
+            "NR": "no resection/surgery"
+        }
+    },
+    "engel_score": {
+        "Description": "A clinical classification from 1-4. See literature for better overview.",
+        "Levels": {
+            "1": "seizure free",
+            "2": "significant seizure frequency reduction",
+            "3": "slight seizure frequency reduction",
+            "4": "no change",
+            "-1": "no surgery, or outcome"
+        }
+    },
+    "ilae_score": {
+        "Description": "A clinical classification from 1-4.",
+        "Levels": {
+            "1": "seizure free",
+            "2": "",
+            "3": "",
+            "4": "",
+            "5": "",
+            "6": "",
+            "-1": "no surgery, or outcome"
+        }
+    },
+    "ethnicity": {
+        "Description": "The ethnicity of the subject (Caucasian, African American, Hispanic andAsian are included).",
+        "Levels": {
+            "0": "caucasian",
+            "1": "african-american",
+            "2": "hispanic",
+            "3": "asian",
+            "-1": "unknown"
+        }
+    },
+    "date_follow_up": {
+        "Description": "Date of the last follow up, from which outcome, Engel and ILAE score are derived."
+    },
+    "years_follow_up": {
+        "Description": "The number of years of follow up since the surgery."
+    },
+    "site": {
+        "Description": "The clinical site for the subject",
+        "Levels": {
+            "nih": "National Institute of Health",
+            "ummc": "University of Maryland Medical Center",
+            "jhh": "Johns Hopkins Hospital",
+            "umf": "University of Miami Florida Hospital",
+            "cc": "Cleveland Clinic"
+        }
+    }
+}
