@@ -30,6 +30,7 @@ def add_subject_metadata_from_excel(
     sex = pat_dict.get(ClinicalColumnns.GENDER.value, "n/a")
     engel_score = pat_dict.get(ClinicalColumnns.ENGEL_SCORE.value, "n/a")
     ilae_score = pat_dict.get(ClinicalColumnns.ILAE_SCORE.value, "n/a")
+    cc_score = pat_dict.get(ClinicalColumnns.CLINICAL_COMPLEXITY.value, "n/a")
     handedness = pat_dict.get(ClinicalColumnns.HANDEDNESS.value, "n/a")
     outcome = pat_dict.get(ClinicalColumnns.OUTCOME.value, "n/a")
     date_follow_up = pat_dict.get(ClinicalColumnns.DATE_FOLLOW_UP.value, "n/a")
@@ -58,6 +59,22 @@ def add_subject_metadata_from_excel(
             "2": "significant seizure frequency reduction",
             "3": "slight seizure frequency reduction",
             "4": "no change",
+            "-1": "no surgery, or outcome",
+        },
+    }
+    append_subject_metadata(bids_root, subject, **subject_metadata)
+
+    # add subject level data - Engel score
+    subject_metadata = {
+        "field": "clinical_complexity",
+        "description": "A clinical complexity classification from 1-4. "
+                       "All patients are marked in the category that their seizures belong to.",
+        "value": engel_score,
+        "levels": {
+            "1": "lesional",
+            "2": "temporal",
+            "3": "extratemporal",
+            "4": "multifocal",
             "-1": "no surgery, or outcome",
         },
     }

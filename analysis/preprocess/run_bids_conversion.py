@@ -3,12 +3,6 @@ import os
 from pathlib import Path
 from typing import Union, List
 
-from mne_bids import BIDSPath, read_raw_bids
-from mne_bids.tsv_handler import _from_tsv, _to_tsv
-from mne_bids.path import get_entities_from_fname, _find_matching_sidecar, BIDSPath
-from natsort import natsorted
-from tqdm import tqdm
-
 from eztrack.base.utils.file_utils import (
     _get_subject_recordings,
     _get_subject_electrode_layout,
@@ -16,17 +10,21 @@ from eztrack.base.utils.file_utils import (
 from eztrack.io.read_datasheet import read_clinical_excel
 from eztrack.preprocess.bids_conversion import (
     write_eztrack_bids,
-    append_seeg_layout_info,
     append_subject_metadata,
     append_original_fname_to_scans,
     _bids_validate,
     _update_sidecar_tsv_byname,
 )
 from eztrack.utils import logger, ClinicalColumnns, ClinicalContactColumns
+from mne_bids import read_raw_bids
+from mne_bids.path import get_entities_from_fname, _find_matching_sidecar, BIDSPath
+from mne_bids.tsv_handler import _from_tsv, _to_tsv
+from natsort import natsorted
+from tqdm import tqdm
 
 
 def add_subject_metadata_from_excel(
-    bids_root: Union[Path, str], subject: str, excel_fpath: Union[Path, str]
+        bids_root: Union[Path, str], subject: str, excel_fpath: Union[Path, str]
 ):
     """Add subject level metadata from excel file."""
     # use excel file to set various data points
@@ -41,6 +39,7 @@ def add_subject_metadata_from_excel(
     age = pat_dict[ClinicalColumnns.CURRENT_AGE.value]
     sex = pat_dict[ClinicalColumnns.GENDER.value]
     engel_score = pat_dict[ClinicalColumnns.ENGEL_SCORE.value]
+    clinical_complextiy = pat_dict[ClinicalColumnns.CLINICAL_COMPLEXITY.value]
     ilae_score = pat_dict[ClinicalColumnns.ILAE_SCORE.value]
     handedness = pat_dict[ClinicalColumnns.HANDEDNESS.value]
     outcome = pat_dict[ClinicalColumnns.OUTCOME.value]
@@ -50,7 +49,7 @@ def add_subject_metadata_from_excel(
 
     # add subject level data - surgical outcome
     subject_metadata = {
-        "field": "outcome",
+        "key": "outcome",
         "description": "Seizure freedom outcome after surgery.",
         "value": outcome,
         "levels": {
@@ -61,9 +60,25 @@ def add_subject_metadata_from_excel(
     }
     append_subject_metadata(bids_root, subject, **subject_metadata)
 
+    # add subject level data - Clinical Complexity
+    subject_metadata = {
+        "key": "clinical_complexity",
+        "description": "A clinical classification from 1-4. "
+                       "See paper for better overview.",
+        "value": clinical_complextiy,
+        "levels": {
+            "1": "lesional",
+            "2": "temporal",
+            "3": "extratemporal",
+            "4": "multi-focal",
+            "-1": "n/a",
+        },
+    }
+    append_subject_metadata(bids_root, subject, **subject_metadata)
+
     # add subject level data - Engel score
     subject_metadata = {
-        "field": "engel_score",
+        "key": "engel_score",
         "description": "A clinical classification from 1-4. See literature for better overview.",
         "value": engel_score,
         "levels": {
@@ -78,7 +93,7 @@ def add_subject_metadata_from_excel(
 
     # add subject level data - ILAE score
     subject_metadata = {
-        "field": "ilae_score",
+        "key": "ilae_score",
         "description": "A clinical classification from 1-4.",
         "value": ilae_score,
         "levels": {
@@ -95,7 +110,7 @@ def add_subject_metadata_from_excel(
 
     # add subject level data - Ethnicity
     subject_metadata = {
-        "field": "ethnicity",
+        "key": "ethnicity",
         "description": "A coarse description of the ethnicity of subject.",
         "value": ethnicity,
         "levels": {
@@ -109,7 +124,7 @@ def add_subject_metadata_from_excel(
 
     # add subject level data - Years Follow Up
     subject_metadata = {
-        "field": "years_follow_up",
+        "key": "years_follow_up",
         "description": "The number of years of follow up since the surgery.",
         "value": years_follow_up,
     }
@@ -117,7 +132,7 @@ def add_subject_metadata_from_excel(
 
     # add subject level data - Years Follow Up
     subject_metadata = {
-        "field": "site",
+        "key": "site",
         "description": "The clinical site for the subject",
         "value": site,
         "levels": {
@@ -149,10 +164,10 @@ def add_subject_metadata_from_excel(
 
 
 def add_bad_chs_from_excel(
-    bids_root: Union[Path, str],
-    subject: str,
-    excel_fpath: Union[Path, str],
-    acquisition: str,
+        bids_root: Union[Path, str],
+        subject: str,
+        excel_fpath: Union[Path, str],
+        acquisition: str,
 ):
     """Append bad ch_names from an excel file."""
     # read in the dataframe of clinical datasheet
@@ -215,7 +230,7 @@ def add_bad_chs_from_excel(
 
 
 def add_subject_data_from_exceldb(
-    bids_root: Union[Path, str], subject_ids: List, excel_fpath: Union[Path, str]
+        bids_root: Union[Path, str], subject_ids: List, excel_fpath: Union[Path, str]
 ):  # pragma: no cover
     """
     Write subject data from a database, as an Excel file.
@@ -233,12 +248,12 @@ def add_subject_data_from_exceldb(
     # go through each subject
     for subject in subject_ids:
         # append bad channels from excel file
-        add_bad_chs_from_excel(
-            bids_root,
-            subject=subject,
-            excel_fpath=excel_fpath,
-            acquisition=acquisition,
-        )
+        # add_bad_chs_from_excel(
+        #     bids_root,
+        #     subject=subject,
+        #     excel_fpath=excel_fpath,
+        #     acquisition=acquisition,
+        # )
 
         # append patient level metadata from excel file
         add_subject_metadata_from_excel(
@@ -252,7 +267,7 @@ def add_subject_data_from_exceldb(
 
 
 def _main(
-    bids_root, source_path, subject_ids, acquisition, task, session, kind
+        bids_root, source_path, subject_ids, acquisition, task, session, kind
 ):  # pragma: no cover
     """Run Bids Conversion script to be updated.
 
@@ -294,8 +309,8 @@ def _main(
         # run BIDs conversion for each separate dataset
         for run_id, source_fpath in enumerate(tqdm(natsorted(files)), start=1):
             if any(
-                x in source_fpath.as_posix().lower()
-                for x in ["tvb18_seeg_sz_2p", "tvb18_seeg_sz_1p"]
+                    x in source_fpath.as_posix().lower()
+                    for x in ["tvb18_seeg_sz_2p", "tvb18_seeg_sz_1p"]
             ):
                 continue
 
@@ -305,11 +320,11 @@ def _main(
             )
             bids_fname = bids_basename.copy().update(suffix=f"{kind}.vhdr")
             bids_fpath = (
-                Path(bids_root)
-                / f"sub-{subject}"
-                / f"ses-{session}"
-                / kind
-                / bids_fname
+                    Path(bids_root)
+                    / f"sub-{subject}"
+                    / f"ses-{session}"
+                    / kind
+                    / bids_fname
             )
             if not bids_fpath.exists():
                 # convert dataset to BIDS format
@@ -331,13 +346,13 @@ def _main(
 
             # write other bad channel info
             # if we have
-            if acquisition == "seeg":
-                electrode_fpath = _get_subject_electrode_layout(
-                    source_path,
-                    subject,
-                )
+            # if acquisition == "seeg":
+            #     electrode_fpath = _get_subject_electrode_layout(
+            #         source_path,
+            #         subject,
+            #     )
                 # append SEEG layout information
-                append_seeg_layout_info(bids_fname, bids_root, electrode_fpath)
+                # append_seeg_layout_info(bids_fname, bids_root, electrode_fpath)
 
             # append scans original filenames
             append_original_fname_to_scans(
@@ -356,9 +371,9 @@ if __name__ == "__main__":
 
     if WORKSTATION == "home":
         # bids root to write BIDS data to
-        bids_root = Path("/Users/adam2392/OneDrive - Johns Hopkins/epilepsy_drugs")
+        bids_root = Path("/Users/adam2392/Dropbox/epilepsy_bids")
 
-        source_dir = bids_root / "sourcedata" / "edf" / "continuous"
+        source_dir = bids_root / "sourcedata"
 
         # path to excel layout file - would be changed to the datasheet locally
         excel_fpath = Path(
@@ -379,103 +394,40 @@ if __name__ == "__main__":
             "/home/adam2392/hdd2/epilepsy_bids/derivatives/fragility/figures"
         )
 
-    # define BIDS identifiers
-    acquisition = "eeg"
-    task = "drugtaper"
-    session = "presurgery"
+    centers = [
+        "cleveland",
+        "clevelandnl",
+        "clevelandtvb",
+        "jhu",
+        "nih",
+        "ummc",
+        "umf",
+    ]
+    for center in centers:
+        # path to original source data
+        source_path = source_dir / center
 
-    # set BIDS kind based on acquistion
-    if acquisition in ["ecog", "seeg", "ieeg"]:
-        kind = "ieeg"
-    elif acquisition in ["eeg"]:
-        kind = "eeg"
+        # HACK: get all subject ids within sourcedata
+        subject_ids = natsorted(
+            [
+                x.name
+                for x in source_path.iterdir()
+                if not x.as_posix().startswith(".")
+                if x.is_dir()
+            ]
+        )
+        # subject_ids = [
+        #     "pt1"
+        #     # "pt17"
+        #     # "la05"
+        #     # "umf004"
+        #     # "pt15"
+        #     # "la03",
+        # ]
 
-    fname_map_to_sub = {
-        "DA19439": "PY16N011",
-        "XA2454": "PY17N014",
-        "XA2458": "PY18N013",
-    }
-    edf_fpaths = [fpath for fpath in source_dir.glob("*.edf") if fpath.is_file()]
-    import collections
-
-    output_fpaths = collections.defaultdict(list)
-    for fpath in edf_fpaths:
-        for fnamekey, subid in fname_map_to_sub.items():
-            if fpath.name.startswith(fnamekey):
-                output_fpaths[subid].append(fpath)
-
-    for subject, fpaths in output_fpaths.items():
-        # run BIDs conversion for each separate dataset
-        for run_id, source_fpath in enumerate(tqdm(natsorted(fpaths)), start=1):
-            logger.info(f"Running run id: {run_id}, with filepath: {source_fpath}")
-            bids_basename = BIDSPath(
-                subject, session, task, acquisition=acquisition, run=run_id
-            )
-            bids_fname = bids_basename.copy().update(suffix=f"{kind}.vhdr")
-            bids_fpath = (
-                Path(bids_root)
-                / f"sub-{subject}"
-                / f"ses-{session}"
-                / kind
-                / bids_fname
-            )
-            if not bids_fpath.exists():
-                # convert dataset to BIDS format
-                acquisition = bids_basename.acquisition
-                if acquisition == "eeg":
-                    kind = "eeg"
-                elif acquisition in ["ecog", "seeg"]:
-                    kind = "ieeg"
-                # write to BIDS
-                bids_fpath = write_eztrack_bids(source_fpath, bids_basename, bids_root)
-
-                # run validation on the raw data
-                raw = read_raw_bids(bids_basename, bids_root)
-                raw.load_data()
-                raw = raw.drop_channels(raw.info["bads"])
-                logger.info(f"Dropping {len(raw.info['bads'])} channels as 'bad'.")
-                raw = raw.pick_types(seeg=True, eeg=True, ecog=True)
-                # validate_raw_metadata(raw)
-
-            # append scans original filenames
-            append_original_fname_to_scans(
-                os.path.basename(source_fpath), bids_root, bids_fname
-            )
-
-    # centers = [
-    #     # "cleveland",
-    #     # "clevelandnl",
-    #     # "clevelandtvb",
-    #     # "jhu",
-    #     # "nih",
-    #     # "ummc",
-    #     # "umf",
-    # ]
-    # for center in centers:
-    #     # path to original source data
-    #     source_path = source_dir / center
-    #
-    #     # HACK: get all subject ids within sourcedata
-    #     subject_ids = natsorted(
-    #         [
-    #             x.name
-    #             for x in source_path.iterdir()
-    #             if not x.as_posix().startswith(".")
-    #             if x.is_dir()
-    #         ]
-    #     )
-    #     # subject_ids = [
-    #     #     "pt1"
-    #     #     # "pt17"
-    #     #     # "la05"
-    #     #     # "umf004"
-    #     #     # "pt15"
-    #     #     # "la03",
-    #     # ]
-    #
-    #     # run main bids conversion
-    #     _main(
-    #         bids_root, source_path, subject_ids, acquisition, task, session, kind
-    #     )
-    #     # add subject metadata
-    #     # add_subject_data_from_exceldb(bids_root, subject_ids, excel_fpath)
+        # run main bids conversion
+        # _main(
+        #     bids_root, source_path, subject_ids, acquisition, task, session, kind
+        # )
+        # add subject metadata
+        add_subject_data_from_exceldb(bids_root, subject_ids, excel_fpath)
