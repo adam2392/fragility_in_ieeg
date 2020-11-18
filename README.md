@@ -34,15 +34,7 @@ Installation Guide
 Setup environment from pipenv. The `Pipfile` contains the Python 
 libraries needed to run the figure generation in [notebook](neural_fragility_journal_figures.ipynb).
 
-.. code-block::
-
-   pipenv install --dev
-
-   # use pipenv to install private repo
-   pipenv install -e git+git@github.com:adam2392/eztrack
-
-   # or
-   pipenv install -e /Users/adam2392/Documents/eztrack
+    pipenv install --dev
 
    # if dev versions are needed
     pipenv install https://api.github.com/repos/mne-tools/mne-bids/zipball/master --dev
