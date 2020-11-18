@@ -48,6 +48,10 @@ libraries needed to run the figure generation in [notebook](neural_fragility_jou
     pipenv install https://api.github.com/repos/mne-tools/mne-bids/zipball/master --dev
     pipenv install https://api.github.com/repos/mne-tools/mne-python/zipball/master --dev
 
+To generate a requirements.txt file for Gigantum, or pip installations:
+
+    pipenv lock --requirements > requirements.txt
+
 Demo
 ====
 We can send a demo of fragility being run on a patient, (namely Patient_01 in paper).
@@ -58,3 +62,4 @@ Instructions for Use
 ====================
 Run the notebook from beginning to end to generate figures, 
 by pointing the path to the `data/` folder here.
+
