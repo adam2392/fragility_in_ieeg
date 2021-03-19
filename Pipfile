@@ -30,14 +30,16 @@ pyvistaqt = "*"
 numpy = "*"
 scipy = "*"
 pandas = "*"
-mne = ">=0.21"
-mne-bids = {file = "https://api.github.com/repos/mne-tools/mne-bids/zipball/master"}
+mne = ">=0.22"
+mne-bids = ">=0.6"
 pybv = ">=0.3"
 pybids = "*"
 joblib = ">=0.15"
 matplotlib = "*"
 seaborn = "*"
 nilearn = "*"
+natsort = "*"
+openpyxl = "*"
 
 [requires]
 python_version = "3.8"

@@ -15,27 +15,22 @@ from sklearn.metrics import (
     balanced_accuracy_score,
     accuracy_score,
 )
+import scipy
+import scipy.signal
 from sklearn.model_selection import GroupKFold, cross_validate
 
-from eztrack.base.statistics.sampling import _resample_seizure
-from eztrack.base.utils.preprocess_utils import (
-    _resample_mat,
-    _apply_threshold,
-    _smooth_matrix,
-)
-from eztrack.io import Result, read_clinical_excel
-from eztrack.io.read_result import _select_window
-from eztrack.utils import Normalize
-from eztrack.utils.annotations import _get_onset_event_id
+from analysis.publication.data_structure import Result
+from analysis.publication.read_datasheet import read_clinical_excel
+from analysis.publication.utils import (Normalize, _select_window,
+                                        _get_onset_event_id, _resample_mat,
+                                        _smooth_matrix, _apply_threshold, _resample_seizure)
 
 # make jobs use half the CPU count
 num_cores = cpu_count() // 2
 
-from mlxtend.evaluate import cochrans_q
-
 
 def extract_Xy_pairs(
-    patient_result_dict, excel_fpath, patient_aggregation_method=None, verbose=True
+        patient_result_dict, excel_fpath, patient_aggregation_method=None, verbose=True
 ):
     """Only works for non-fragility sliced data..."""
     X = []
@@ -54,8 +49,8 @@ def extract_Xy_pairs(
         print(subject, len(datasets))
         # get a nested list of all the SOZ channel indices
         _sozinds_list = [
-            [ind for ind, ch in enumerate(datasets[0].ch_names) if ch in soz_chs]
-        ] * len(datasets)
+                            [ind for ind, ch in enumerate(datasets[0].ch_names) if ch in soz_chs]
+                        ] * len(datasets)
 
         for idx, result in enumerate(datasets):
             if max(_sozinds_list[0]) > len(result.ch_names):
@@ -145,13 +140,13 @@ def _subsample_matrices_in_time(mat_list):
 
 
 def format_supervised_dataset(
-    X,
-    sozinds_list,
-    onsetwin_list,
-    threshold=None,
-    window=None,
-    weighting_func=None,
-    smooth=None,
+        X,
+        sozinds_list,
+        onsetwin_list,
+        threshold=None,
+        window=None,
+        weighting_func=None,
+        smooth=None,
 ):
     """Format a supervised learning dataset with (unformatted_X, y).
 
@@ -185,7 +180,7 @@ def format_supervised_dataset(
     newX = []
     dropped_inds = []
     for idx, (data_mat, sozinds, onsetwin) in enumerate(
-        zip(X, sozinds_list, onsetwin_list)
+            zip(X, sozinds_list, onsetwin_list)
     ):
         if onsetwin is None:
             dropped_inds.append(idx)
@@ -286,17 +281,17 @@ def format_supervised_dataset(
 
 
 def _evaluate_model(
-    clf_func,
-    model_params,
-    window,
-    train_inds,
-    X_formatted,
-    y,
-    groups,
-    cv,
-    dropped_inds=None,
+        clf_func,
+        model_params,
+        window,
+        train_inds,
+        X_formatted,
+        y,
+        groups,
+        cv,
+        dropped_inds=None,
 ):
-    y = np.array(y).copy()
+    y = np.array(y).copy().squeeze()
     groups = np.array(groups).copy()
     train_inds = train_inds.copy()
 
@@ -317,6 +312,8 @@ def _evaluate_model(
     elif clf_func == rerfClassifier:
         model_params.update({"image_width": np.abs(window).sum()})
         clf = clf_func(**model_params)
+    else:
+        clf = clf_func
 
     # note that training data (Xtrain, ytrain) will get split again
     Xtrain, ytrain = X_formatted[train_inds, ...], y[train_inds]
@@ -344,15 +341,15 @@ def _evaluate_model(
 
 
 def tune_hyperparameters(
-    clf_func,
-    unformatted_X,
-    y,
-    groups,
-    train_inds,
-    test_inds,
-    hyperparameters,
-    dataset_params,
-    **model_params,
+        clf_func,
+        unformatted_X,
+        y,
+        groups,
+        train_inds,
+        test_inds,
+        hyperparameters,
+        dataset_params,
+        **model_params,
 ):
     """Perform hyperparameter tuning.
 
@@ -458,15 +455,15 @@ def tune_hyperparameters(
 
 
 def _plot_roc_curve(
-    mean_tpr,
-    mean_fpr,
-    std_tpr=0.0,
-    mean_auc=0.0,
-    std_auc=0.0,
-    label=None,
-    ax=None,
-    color=None,
-    plot_chance=True,
+        mean_tpr,
+        mean_fpr,
+        std_tpr=0.0,
+        mean_auc=0.0,
+        std_auc=0.0,
+        label=None,
+        ax=None,
+        color=None,
+        plot_chance=True,
 ):
     import matplotlib.pyplot as plt
     import seaborn as sns
@@ -605,7 +602,7 @@ def load_patient_tfr(deriv_path, subject, band, task=None, verbose=True):
 
 
 def load_patient_graphstats(
-    deriv_path, subject, kind="ieeg", task="ictal", band=None, verbose=True
+        deriv_path, subject, kind="ieeg", task="ictal", band=None, verbose=True
 ):
     from eztrack.io.read_result import read_result_eztrack
 
@@ -745,7 +742,7 @@ def _load_features(feature_name, subject, feature_deriv_path, freq_bands, band, 
 
 
 def summarize_feature_comparisons(
-    base_clf: BaseEstimator, comparison_clfs: Dict[str, BaseEstimator], X_test, y_test
+        base_clf: BaseEstimator, comparison_clfs: Dict[str, BaseEstimator], X_test, y_test
 ):
     from mlxtend.evaluate import mcnemar, cochrans_q, mcnemar_table
 
