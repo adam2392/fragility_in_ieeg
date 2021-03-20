@@ -7,10 +7,10 @@ import numpy as np
 from rerf.rerfClassifier import rerfClassifier
 from sklearn.calibration import calibration_curve
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import brier_score_loss
-from sklearn.metrics import roc_curve
+from sklearn.metrics import brier_score_loss, roc_curve
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.utils import resample
+from sklearn.model_selection import GroupKFold, cross_validate
 
 # functions related to the feature comparison experiment
 from analysis.publication.read_datasheet import read_clinical_excel
@@ -20,9 +20,9 @@ from analysis.publication.study import (
     extract_Xy_pairs,
     format_supervised_dataset,
     tune_hyperparameters,
+_evaluate_model
 )
 from analysis.publication.utils import NumpyEncoder
-
 # from rerf.urerf import UnsupervisedRandomForest
 
 # define various list's of patients
@@ -350,6 +350,291 @@ def sample_cv_clinical_complexity(
             test_pats=test_pats,
         )
     return
+
+def run_traintest_exp(
+        intermed_fpath=None,
+        clf_type="rf",
+):
+    """Run train-test experiment (no nested cv)."""
+    from analysis.publication.extract_datasets import load_ictal_frag_data
+    from sklearn.metrics import (
+        average_precision_score,
+        roc_auc_score,
+        balanced_accuracy_score,
+        accuracy_score,
+    )
+
+    feature_name = "fragility"
+    metric = "roc_auc"
+    BOOTSTRAP = False
+
+    # initialize the classifier
+    model_params = {
+        "n_estimators": 500,
+        "max_depth": max_depth[0],
+        "max_features": max_features[0],
+        "n_jobs": -1,
+        "random_state": random_state,
+    }
+    #### SAVE RESULTS
+    study_path = Path(deriv_path) / "study"
+
+    # define hyperparameters
+    windows = [
+        (-80, 25),
+        # (0, 40),
+        # (-40, 25),  # -5 seconds to first 20% of seizure
+        # (0, 80),
+        # (-40, 0),
+        # (-80, 0),
+    ]
+    thresholds = [
+        None,
+    ]
+    weighting_funcs = [None]  # _exponential_weight, _gaussian_weight]
+
+    # initialize the type of classification function we'll use
+    IMAGE_HEIGHT = 20
+    if clf_type == "rf":
+        clf_func = RandomForestClassifier
+    elif clf_type == "srerf":
+        model_params.update(
+            {
+                "projection_matrix": "S-RerF",
+                "image_height": IMAGE_HEIGHT,
+                "patch_height_max": 4,
+                "patch_height_min": 1,
+                "patch_width_max": 8,
+                "patch_width_min": 1,
+            }
+        )
+        clf_func = rerfClassifier
+    elif clf_type == "mtmorf":
+        model_params.update(
+            {
+                "projection_matrix": "MT-MORF",
+                "image_height": IMAGE_HEIGHT,
+                "patch_height_max": 4,
+                "patch_height_min": 1,
+                "patch_width_max": 8,
+                "patch_width_min": 1,
+            }
+        )
+        clf_func = rerfClassifier
+
+    # load unformatted datasets
+    # i.e. datasets without data-hyperparameters applied
+    if not intermed_fpath:
+        (
+            unformatted_X,
+            y,
+            subject_groups,
+            sozinds_list,
+            onsetwin_list,
+        ) = load_ictal_frag_data(deriv_path, excel_fpath=excel_fpath)
+    else:
+        (
+            unformatted_X,
+            y,
+            subject_groups,
+            sozinds_list,
+            onsetwin_list,
+        ) = load_ictal_frag_data(intermed_fpath, excel_fpath=excel_fpath)
+
+    print(
+        len(unformatted_X),
+        len(y),
+        len(subject_groups),
+        len(onsetwin_list),
+        len(sozinds_list),
+    )
+
+    # get the dataset parameters loaded in
+    dataset_params = {"sozinds_list": sozinds_list, "onsetwin_list": onsetwin_list}
+
+    # format supervised learning datasets
+    # define preprocessing to convert labels/groups into numbers
+    enc = OrdinalEncoder()  # handle_unknown='ignore', sparse=False
+    y = enc.fit_transform(np.array(y)[:, np.newaxis])
+    subject_groups = np.array(subject_groups)
+    # store the cross validation nested scores per feature
+    cv_scores = collections.defaultdict(list)
+
+    # run this without the above for a warm start
+    for jdx in range(0, 10):
+        cv_scores = collections.defaultdict(list)
+
+        with np.load(
+                # study_path / "inds" / 'clinical_complexity' / f"{jdx}-inds.npz",
+                study_path
+                / "inds"
+                / "fixed_folds_subjects"
+                / f"fragility-srerf-{jdx}-inds.npz",
+                allow_pickle=True,
+        ) as data_dict:
+            # train_inds, test_inds = data_dict["train_inds"], data_dict["test_inds"]
+            train_pats, test_pats = data_dict["train_pats"], data_dict["test_pats"]
+
+        # set train indices based on which subjects
+        train_inds = [
+            idx for idx, sub in enumerate(subject_groups) if sub in train_pats
+        ]
+        test_inds = [idx for idx, sub in enumerate(subject_groups) if sub in test_pats]
+
+        # note that training data (Xtrain, ytrain) will get split again
+        # testing dataset (held out until evaluation)
+        subjects_test = subject_groups[test_inds]
+        print(subjects_test)
+
+        if len(np.unique(y[test_inds])) == 1:
+            print(f"Skipping group cv iteration {jdx} due to degenerate test set")
+            continue
+        
+        '''Run cross-validation.'''
+        window = windows[0]
+        threshold = thresholds[0]
+        weighting_func = weighting_funcs[0]
+        X_formatted, dropped_inds = format_supervised_dataset(
+            unformatted_X,
+            **dataset_params,
+            window=window,
+            threshold=threshold,
+            weighting_func=weighting_func,
+        )
+
+        # run cross-validation
+        # instantiate model
+        if clf_func == RandomForestClassifier:
+            # instantiate the classifier
+            clf = clf_func(**model_params)
+        elif clf_func == rerfClassifier:
+            model_params.update({"image_width": np.abs(window).sum()})
+            clf = clf_func(**model_params)
+        else:
+            clf = clf_func
+
+        # perform CV using Sklearn
+        scoring_funcs = {
+            "roc_auc": roc_auc_score,
+            "accuracy": accuracy_score,
+            "balanced_accuracy": balanced_accuracy_score,
+            "average_precision": average_precision_score,
+        }
+        scores = cross_validate(
+            clf,
+            X_formatted,
+            y,
+            groups=subject_groups,
+            cv=[train_inds, test_inds],
+            scoring=list(scoring_funcs.keys()),
+            return_estimator=True,
+            return_train_score=True,
+        )
+
+        # get the best classifier based on pre-chosen metric
+        test_key = f"test_{metric}"
+        print(scores.keys())
+        print(scores)
+        estimator = scores.pop('estimator')
+        
+        # resample the held-out test data via bootstrap
+        test_sozinds_list = np.asarray(dataset_params["sozinds_list"])[test_inds]
+        test_onsetwin_list = np.asarray(dataset_params["onsetwin_list"])[test_inds]
+        # evaluate on the testing dataset
+        X_test, y_test = np.array(X_formatted)[test_inds, ...], np.array(y)[test_inds]
+        groups_test = np.array(subject_groups)[test_inds]
+
+        if BOOTSTRAP:
+            for i in range(500):
+                X_boot, y_boot, sozinds, onsetwins = resample(
+                    X_test,
+                    y_test,
+                    test_sozinds_list,
+                    test_onsetwin_list,
+                    n_samples=len(y_test),
+                )
+        else:
+            X_boot, y_boot = X_test.copy(), y_test.copy()
+        
+        # evaluate on the test set
+        y_pred_prob = estimator.predict_proba(X_boot)[:, 1]
+        y_pred = estimator.predict(X_boot)
+
+        # store the actual outcomes and the predicted probabilities
+        cv_scores["validate_ytrue"].append(list(y_test))
+        cv_scores["validate_ypred_prob"].append(list(y_pred_prob))
+        cv_scores["validate_ypred"].append(list(y_pred))
+        cv_scores['validate_subject_groups'].append(list(groups_test))
+
+        # store ROC curve metrics on the held-out test set
+        fpr, tpr, thresholds = roc_curve(y_boot, y_pred_prob, pos_label=1)
+        fnr, tnr, neg_thresholds = roc_curve(y_boot, y_pred_prob, pos_label=0)
+        cv_scores["validate_fpr"].append(list(fpr))
+        cv_scores["validate_tpr"].append(list(tpr))
+        cv_scores["validate_fnr"].append(list(fnr))
+        cv_scores["validate_tnr"].append(list(tnr))
+        cv_scores["validate_thresholds"].append(list(thresholds))
+
+        print("Done analyzing ROC stats...")
+
+        # run the feature importances
+        # compute calibration curve
+        fraction_of_positives, mean_predicted_value = calibration_curve(
+            y_boot, y_pred_prob, n_bins=10, strategy="quantile"
+        )
+        clf_brier_score = np.round(
+            brier_score_loss(y_boot, y_pred_prob, pos_label=np.array(y_boot).max()), 2
+        )
+
+        print("Done analyzing calibration stats...")
+
+        # store ingredients for a calibration curve
+        cv_scores["validate_brier_score"].append(float(clf_brier_score))
+        cv_scores["validate_fraction_pos"].append(list(fraction_of_positives))
+        cv_scores["validate_mean_pred_value"].append(list(mean_predicted_value))
+
+        # store outputs to run McNemars test and Cochrans Q test
+        # get the shape of a single feature "vector" / structure array
+        pat_predictions, pat_true = combine_patient_predictions(
+            y_boot, y_pred_prob, subjects_test
+        )
+        cv_scores["validate_pat_predictions"].append(pat_predictions)
+        cv_scores["validate_pat_true"].append(pat_true)
+
+        # store output for feature importances
+        if clf_type == "rf":
+            n_jobs = -1
+        else:
+            n_jobs = 1
+        results = determine_feature_importances(
+            estimator, X_boot, y_boot, n_jobs=n_jobs
+        )
+        imp_std = results.importances_std
+        imp_vals = results.importances_mean
+        cv_scores["validate_imp_mean"].append(list(imp_vals))
+        cv_scores["validate_imp_std"].append(list(imp_std))
+
+        print("Done analyzing feature importances...")
+
+        # save intermediate analyses
+        clf_func_path = (
+                study_path / "clf-train-vs-test" / f"{clf_type}_classifiers_{feature_name}_{jdx}.npz"
+        )
+        clf_func_path.parent.mkdir(exist_ok=True, parents=True)
+
+        # nested CV scores
+        nested_scores_fpath = (
+                study_path / f"study_cv_scores_{clf_type}_{feature_name}_{jdx}.json"
+        )
+
+        # save the estimators
+        if clf_type not in ["srerf", "mtmorf"]:
+            estimators = scores.pop("estimator")
+            np.savez_compressed(clf_func_path, estimators=estimators)
+
+        # save all the master scores as a JSON file
+        with open(nested_scores_fpath, "w") as fin:
+            json.dump(cv_scores, fin, cls=NumpyEncoder)
 
 
 def run_exp(
