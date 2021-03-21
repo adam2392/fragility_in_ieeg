@@ -7,10 +7,16 @@ import numpy as np
 from rerf.rerfClassifier import rerfClassifier
 from sklearn.calibration import calibration_curve
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import (
+    average_precision_score,
+    roc_auc_score,
+    balanced_accuracy_score,
+    accuracy_score,
+)
 from sklearn.metrics import brier_score_loss, roc_curve
+from sklearn.model_selection import cross_validate
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.utils import resample
-from sklearn.model_selection import GroupKFold, cross_validate
 
 # functions related to the feature comparison experiment
 from analysis.publication.read_datasheet import read_clinical_excel
@@ -19,10 +25,10 @@ from analysis.publication.study import (
     determine_feature_importances,
     extract_Xy_pairs,
     format_supervised_dataset,
-    tune_hyperparameters,
-_evaluate_model
+    tune_hyperparameters
 )
 from analysis.publication.utils import NumpyEncoder
+
 # from rerf.urerf import UnsupervisedRandomForest
 
 # define various list's of patients
@@ -351,18 +357,13 @@ def sample_cv_clinical_complexity(
         )
     return
 
+
 def run_traintest_exp(
         intermed_fpath=None,
         clf_type="rf",
 ):
     """Run train-test experiment (no nested cv)."""
     from analysis.publication.extract_datasets import load_ictal_frag_data
-    from sklearn.metrics import (
-        average_precision_score,
-        roc_auc_score,
-        balanced_accuracy_score,
-        accuracy_score,
-    )
 
     feature_name = "fragility"
     metric = "roc_auc"
@@ -489,7 +490,7 @@ def run_traintest_exp(
         if len(np.unique(y[test_inds])) == 1:
             print(f"Skipping group cv iteration {jdx} due to degenerate test set")
             continue
-        
+
         '''Run cross-validation.'''
         window = windows[0]
         threshold = thresholds[0]
@@ -536,7 +537,7 @@ def run_traintest_exp(
         print(scores.keys())
         print(scores)
         estimator = scores.pop('estimator')
-        
+
         # resample the held-out test data via bootstrap
         test_sozinds_list = np.asarray(dataset_params["sozinds_list"])[test_inds]
         test_onsetwin_list = np.asarray(dataset_params["onsetwin_list"])[test_inds]
@@ -555,7 +556,7 @@ def run_traintest_exp(
                 )
         else:
             X_boot, y_boot = X_test.copy(), y_test.copy()
-        
+
         # evaluate on the test set
         y_pred_prob = estimator.predict_proba(X_boot)[:, 1]
         y_pred = estimator.predict(X_boot)
