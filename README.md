@@ -7,6 +7,8 @@ publication can be found in the `data/` directory.
 For a demo of the neural fragility algorithm on a single subject, contact 
 authors for the Gigantum demo.
 
+[![bioRXiv](https://img.shields.io/badge/arXiv-862797-red.svg)](https://www.biorxiv.org/content/10.1101/862797v4)
+
 Data Organization
 -----------------
 
